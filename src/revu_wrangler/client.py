@@ -10,6 +10,7 @@ from .config import (
     DEFAULT_MAX_RETRIES,
     DEFAULT_RETRY_BACKOFF_BASE,
     DEFAULT_RETRY_STATUS_CODES,
+    OAUTH_TOKEN_PATH,
 )
 from .exceptions import AuthenticationError
 from .sessions import SessionsAPI
@@ -58,6 +59,9 @@ class BluebeamClient:
 
         # Attach event hooks to auto-inject auth + client_id header
         def _auth_hook(request: httpx.Request):
+            # Allow OAuth token exchange/refresh without requiring an existing token.
+            if request.url.path == OAUTH_TOKEN_PATH:
+                return
             # Inject Authorization header (refresh if needed)
             if self.auth.token is None:
                 raise AuthenticationError(
@@ -75,6 +79,8 @@ class BluebeamClient:
         # httpx.Client can't be mutated for hooks; recreate with hooks:
         self.http.close()
         self.http = httpx.Client(timeout=timeout, event_hooks=self.http_event_hooks)
+        # Keep AuthManager pointed at the active client instance.
+        self.auth.set_http_client(self.http)
 
         # APIs
         self.sessions = SessionsAPI(

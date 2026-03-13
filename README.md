@@ -146,6 +146,9 @@ uv sync
 # Run tests
 uv run pytest
 
+# Run interactive API smoke check
+uv run python development/smoke_sessions.py
+
 # Type checking
 uv run mypy .
 
