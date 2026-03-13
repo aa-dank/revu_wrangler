@@ -8,7 +8,7 @@ A Python SDK for the Bluebeam Cloud API, providing easy access to Bluebeam Studi
 - **Session Management**: Complete API for managing Bluebeam Studio Sessions
 - **Type-Safe**: Fully typed for better IDE support and fewer runtime errors
 - **Automatic Retries**: Configurable retry logic with exponential backoff
-- **Multi-Region Support**: Support for US, EU, and ANZ regions
+- **Multi-Region Support**: Support for US, DE, AU, UK, and SE regions
 
 ## Installation
 
@@ -33,7 +33,7 @@ client = BluebeamClient(
     client_id="your_client_id",
     client_secret="your_client_secret",
     redirect_uri="your_redirect_uri",
-    region="US"  # Options: "US", "EU", "ANZ"
+    region="US"  # Options: "US", "DE", "AU", "UK", "SE"
 )
 ```
 
@@ -84,7 +84,7 @@ The main entry point for the SDK.
 - `client_id` (str): Your Bluebeam OAuth client ID
 - `client_secret` (str): Your Bluebeam OAuth client secret
 - `redirect_uri` (str): OAuth redirect URI
-- `region` (str): API region - "US" (default), "EU", or "ANZ"
+- `region` (str): API region - "US" (default), "DE", "AU", "UK", or "SE"
 - `scopes` (List[str], optional): OAuth scopes (defaults to Studio Sessions scopes)
 - `timeout` (float): HTTP request timeout in seconds (default: 30.0)
 - `max_retries` (int): Maximum number of retry attempts (default: 3)
@@ -109,7 +109,12 @@ Access via `client.sessions`.
 - `create_session(name, description=None, **kwargs)`: Create new session
 - `update_session(session_id, **kwargs)`: Update session
 - `delete_session(session_id)`: Delete session
-- Additional methods for session members, files, and folders
+- `list_users(session_id)`: List all users/attendees in a session
+- `get_user(session_id, user_id)`: Get details for a single user in a session
+- `list_activities(session_id, page=1, page_size=50)`: List all activities in a session
+- `list_markups(session_id, file_id=None)`: List markups in a session (optionally scoped to a file)
+- `list_markup_statuses(session_id)`: List valid markup statuses for a session
+- Additional methods for session files, snapshots, and folders
 
 ## Exception Handling
 

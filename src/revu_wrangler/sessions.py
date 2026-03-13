@@ -212,3 +212,55 @@ class SessionsAPI:
                 for chunk in r.iter_bytes():
                     f.write(chunk)
         return dest_path
+
+    # ---------- Users ----------
+    @retry(max_retries=DEFAULT_MAX_RETRIES, backoff_base=DEFAULT_RETRY_BACKOFF_BASE, retry_statuses=DEFAULT_RETRY_STATUS_CODES)
+    def list_users(self, session_id: str) -> Dict[str, Any]:
+        """List all users/attendees in a Studio Session."""
+        url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/users"
+        resp = self._http.get(url, headers=self._headers())
+        raise_for_status_mapped(resp)
+        return resp.json()
+
+    @retry(max_retries=DEFAULT_MAX_RETRIES, backoff_base=DEFAULT_RETRY_BACKOFF_BASE, retry_statuses=DEFAULT_RETRY_STATUS_CODES)
+    def get_user(self, session_id: str, user_id: str) -> Dict[str, Any]:
+        """Get details for a single user in a Studio Session."""
+        url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/users/{user_id}"
+        resp = self._http.get(url, headers=self._headers())
+        raise_for_status_mapped(resp)
+        return resp.json()
+
+    # ---------- Activities ----------
+    @retry(max_retries=DEFAULT_MAX_RETRIES, backoff_base=DEFAULT_RETRY_BACKOFF_BASE, retry_statuses=DEFAULT_RETRY_STATUS_CODES)
+    def list_activities(self, session_id: str, *, page: int = 1, page_size: int = 50) -> Dict[str, Any]:
+        """List all activities in a Studio Session (join, leave, markup events, etc.)."""
+        url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/activities"
+        params = {"page": page, "pageSize": page_size}
+        resp = self._http.get(url, headers=self._headers(), params=params)
+        raise_for_status_mapped(resp)
+        return resp.json()
+
+    # ---------- Markups ----------
+    @retry(max_retries=DEFAULT_MAX_RETRIES, backoff_base=DEFAULT_RETRY_BACKOFF_BASE, retry_statuses=DEFAULT_RETRY_STATUS_CODES)
+    def list_markups(self, session_id: str, file_id: Optional[str] = None) -> Dict[str, Any]:
+        """
+        List markups in a session.
+
+        If file_id is provided, returns markups for that specific file.
+        If file_id is None, returns markups across all files in the session.
+        """
+        if file_id:
+            url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/files/{file_id}/markups"
+        else:
+            url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/markups"
+        resp = self._http.get(url, headers=self._headers())
+        raise_for_status_mapped(resp)
+        return resp.json()
+
+    @retry(max_retries=DEFAULT_MAX_RETRIES, backoff_base=DEFAULT_RETRY_BACKOFF_BASE, retry_statuses=DEFAULT_RETRY_STATUS_CODES)
+    def list_markup_statuses(self, session_id: str) -> Dict[str, Any]:
+        """List valid statuses for markups in a session."""
+        url = f"{self.base_url}{API_ROOT}/sessions/{session_id}/markups/statuses"
+        resp = self._http.get(url, headers=self._headers())
+        raise_for_status_mapped(resp)
+        return resp.json()
