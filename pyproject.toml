@@ -1,7 +1,12 @@
 [project]
 name = "revu-wrangler"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python SDK for the Bluebeam Cloud API"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "httpx>=0.27",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
