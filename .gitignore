@@ -89,5 +89,5 @@ $RECYCLE.BIN/
 WARP.md
 test.py
 
-# .env files
-.env
+# development dir
+development/
