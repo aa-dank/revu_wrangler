@@ -16,8 +16,8 @@ API_ROOT = "/publicapi/v1"
 DEFAULT_SCOPES = ["full_user", "offline_access"]
 
 # OAuth paths (relative to region base)
-OAUTH_AUTHORIZE_PATH = "/oauth/authorize"
-OAUTH_TOKEN_PATH = "/oauth/token"
+OAUTH_AUTHORIZE_PATH = "/oauth2/authorize"
+OAUTH_TOKEN_PATH = "/oauth2/token"
 
 # Request timeouts (seconds)
 DEFAULT_TIMEOUT = 30.0
